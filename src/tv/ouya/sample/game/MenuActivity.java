@@ -43,6 +43,14 @@ public class MenuActivity extends Activity {
                 startActivity(new Intent(MenuActivity.this, GameActivity.class));
             }
         });
+        
+        Button howToPlay = (Button) findViewById(R.id.howtoplay_button);
+        howToPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MenuActivity.this, HowToPlayActivity.class));
+            }
+        });
 
         Button options = (Button) findViewById(R.id.options_button);
         options.setOnClickListener(new View.OnClickListener() {
