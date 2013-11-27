@@ -16,7 +16,7 @@
 -->
 <resources>
     <string name="app_name">GameSample</string>
-    <string name="menu_title">Welcome to OUYAtron!</string>
+    <string name="menu_title">My Dogs Are Dead</string>
     <string name="new_game">New Game</string>
     <string name="options">Options</string>
     <string name="quit">Quit</string>

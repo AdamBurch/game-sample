@@ -8,28 +8,30 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class HowToPlayActivity extends Activity {
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.howtoplay);
-        
-        final TextView howToPlayText = (TextView) findViewById(R.id.howtoplay_textView);
+
         Resources res = getResources();
         final String[] howToPlayMessages = res.getStringArray(R.array.howtoplay_messages);
-        
+        final TextView howToPlayText = (TextView) findViewById(R.id.howtoplay_textView);
+
+        howToPlayText.setText(howToPlayMessages[0]);
+
         Button notEnough = (Button) findViewById(R.id.notenough_button);
         notEnough.setOnClickListener(new View.OnClickListener() {
-        	int counter = 0;
-        	
+            int counter = 0;
+
             @Override
             public void onClick(View v) {
                 if (counter >= howToPlayMessages.length)
-                	counter = 0;
+                    counter = 0;
                 else
-                	counter++;
-                
+                    counter++;
+
                 howToPlayText.setText(howToPlayMessages[counter]);
             }
         });
-	}
+    }
 }
