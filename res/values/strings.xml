@@ -31,7 +31,8 @@
     <string name="notenough">Not Enough</string>
     <string-array name="howtoplay_messages">
         <item >In This Game, You Are I\nMy Goal Was To Keep My Dogs Alive\nI Failed</item>
-        <item >Bambino Is Black, And Complicated\nRex Is White, And Simple</item>
+        <item >Bambino Had Black Fur\nRex Had White Fur</item>
         <item >Disease Can Be Cured, But Cash Can\'t Come Back</item>
+        <item >HOLD A TO PICK UP A DOG.\n\nThat's enough.</item>
     </string-array>
 </resources>

@@ -60,7 +60,7 @@ public class GameActivity extends Activity {
             
         }
         rex = new Rex(players[0]);
-        bambino = new Bambino(rex);
+        bambino = new Bambino(rex, players[0]);
         new EnemySpawner(rex);
         
         switch (Options.getInstance().getLevel()) {
