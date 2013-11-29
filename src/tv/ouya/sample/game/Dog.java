@@ -5,32 +5,21 @@ import java.nio.ByteOrder;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Color;
 import android.graphics.PointF;
-import android.media.MediaPlayer;
 
-public class Dog extends RenderObject {
-    private final Player player;
+public abstract class Dog extends RenderObject {
+    private final Ramper forward;
+    private final Ramper stop;
+
     private boolean isVisible = false;
     private boolean isDead = false;
-    private float forwardAmount;
 
-    static final private int[] c_playerColors = {
-        Color.WHITE,
-        Color.BLUE,
-        Color.YELLOW,
-        Color.GREEN
-    };
-    static final private int c_deadColor = Color.DKGRAY;
     static final private float c_playerRadius = 0.5f;
 
-    static MediaPlayer s_sfx[] = null;
-
-    public Dog(Player player) {
+    public Dog() {
         super(c_playerRadius, true);
-        this.player = player;
-        this.up = new Ramper(0.2f, 3000);
-        this.down = new Ramper(0, 700);
+        this.forward = getForward(); //new Ramper(0.2f, 3000);
+        this.stop = getStop(); //new Ramper(0, 700);
         setCollisionListener(new CollisionListener() {
             @Override
             public void onCollide(PointF prev, RenderObject me, RenderObject other) {
@@ -40,17 +29,20 @@ public class Dog extends RenderObject {
                     translation = wall.slideAgainst(prev, translation, getRadius());
                 }
             }
+            
         });
-    }
 
-    public void init() {
         isVisible = true;
 
         // Pick a random starting location
+        // TODO: Move this to constructor
         translation.x = (float) (Math.random() * (GameRenderer.BOARD_WIDTH - 1.0f) + 1.0f);
         translation.y = (float) (Math.random() * (GameRenderer.BOARD_HEIGHT - 1.0f) + 1.0f);
         rotation = (float) (Math.random() * 360.0f);
     }
+
+    protected abstract Ramper getStop();
+    protected abstract Ramper getForward();
 
     public boolean isValid() {
         return isVisible;
@@ -74,12 +66,7 @@ public class Dog extends RenderObject {
         ibb.order(ByteOrder.nativeOrder());
         indexBuffer = ibb.asShortBuffer();
 
-        final float[] coords = {
-               -0.5f,  0.5f, 0.0f, // 0
-                0.0f, -0.2f, 0.0f, // 1
-                0.0f,  0.1f, 0.0f, // 2
-                0.5f,  0.5f, 0.0f, // 3
-        };
+        final float[] coords = getVertices();
 
         vertexBuffer.put(coords);
         indexBuffer.put(_indicesArray);
@@ -88,9 +75,19 @@ public class Dog extends RenderObject {
         indexBuffer.position(0);
     }
 
-    final float c_forwardSpeed = 0.1f;
-    private Ramper up;
-    private Ramper down;
+    /**
+     * @return an array where every sequence of 3
+     * is an (x,y,z) coord. 
+     * 
+     * EX:
+     * {
+     *         -0.5f,  0.5f, 0.0f, // 0
+     *          0.0f, -0.2f, 0.0f, // 1
+     *          0.0f,  0.1f, 0.0f, // 2
+     *          0.5f,  0.5f, 0.0f, // 3
+     *  };
+     */
+    protected abstract float[] getVertices();
 
     @Override
     protected void update() {
@@ -99,20 +96,15 @@ public class Dog extends RenderObject {
         }
 
         super.update();
+        doUpdate();
 
-        PointF playerPos = player.getPosition();
-        float xFromPlayer = playerPos.x - this.translation.x;
-        float yFromPlayer = playerPos.y - this.translation.y;
-        float desiredDir = (float) Math.toDegrees( Math.atan2(-xFromPlayer, yFromPlayer));
-        setRotate(desiredDir);
-
-        double dist = (xFromPlayer * xFromPlayer) + (yFromPlayer * yFromPlayer);
-        if(dist > 25) {
-            forwardAmount = up.rampMe();
-            down.ready(forwardAmount);
+        float forwardAmount = 0.0f;
+        if(shouldGoForward()) {
+            forwardAmount = forward.rampMe();
+            stop.ready(forwardAmount);
         } else {
-            forwardAmount = down.rampMe();
-            up.ready(forwardAmount);
+            forwardAmount = stop.rampMe();
+            forward.ready(forwardAmount);
         }
 
         if (!isDead && forwardAmount != 0.0f) {
@@ -120,16 +112,31 @@ public class Dog extends RenderObject {
         }
     }
 
+    protected abstract boolean shouldGoForward();
+
+    /*
+    PointF playerPos = player.getPosition();
+    float xFromPlayer = playerPos.x - this.translation.x;
+    float yFromPlayer = playerPos.y - this.translation.y;
+    float desiredDir = (float) Math.toDegrees( Math.atan2(-xFromPlayer, yFromPlayer));
+    setRotate(desiredDir);
+     */
+    protected abstract void doUpdate();
+
     @Override
     protected void doRender(GL10 gl) {
         if (!isValid()) {
             return;
         }
 
-        int color = isDead ? c_deadColor : c_playerColors[3];
-        setColor(gl, color);
+        setColor(gl, getColor());
         super.doRender(gl);
     }
+
+    /**
+     * @return an int from android.graphics.Color;
+     */
+    protected abstract int getColor();
 
     @Override
     public boolean doesCollide(RenderObject other) {
@@ -137,5 +144,17 @@ public class Dog extends RenderObject {
             return false;
         }
         return super.doesCollide(other);
+    }
+    
+    /**
+     * yeah yeah, points aren't vectors. Bite me.
+     * @param obj the target.
+     * @return a vector that tells you how far you are from the target.
+     */
+    protected PointF getVectorToTarget(RenderObject obj) {
+        PointF pos = obj.getPosition();
+        float xDist = pos.x - this.translation.x;
+        float yDist = pos.y - this.translation.y;
+        return new PointF(xDist, yDist);
     }
 }

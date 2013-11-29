@@ -30,8 +30,8 @@
     <string name="howtoplay_button_title">How To Play</string>
     <string name="notenough">Not Enough</string>
     <string-array name="howtoplay_messages">
-        <item >In This Game, You Are I\nMy Goal Is To Keep My Dogs Alive\nI Have Failed</item>
-        <item >Bambino Is Black, And Does His Own Thing\nRex Is White, And Loves You</item>
+        <item >In This Game, You Are I\nMy Goal Was To Keep My Dogs Alive\nI Failed</item>
+        <item >Bambino Is Black, And Complicated\nRex Is White, And Simple</item>
         <item >Disease Can Be Cured, But Cash Can\'t Come Back</item>
     </string-array>
 </resources>

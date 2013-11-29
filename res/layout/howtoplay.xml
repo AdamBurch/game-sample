@@ -8,9 +8,21 @@
     <TextView
         android:id="@+id/howtoplay_textView"
         android:layout_width="242dp"
-        android:layout_height="131dp"
+        android:layout_height="174dp"
         android:layout_gravity="center"
         android:text="" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/notenough_button"
@@ -18,5 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/notenough" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

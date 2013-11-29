@@ -29,7 +29,8 @@ import static tv.ouya.sample.game.R.layout;
 
 public class GameActivity extends Activity {
     private Player[] players;
-    private Dog rex;
+    private Rex rex;
+    private Bambino bambino;
     @SuppressLint("UseValueOf")
     static public Boolean pauseInput = new Boolean(false);
 
@@ -58,9 +59,8 @@ public class GameActivity extends Activity {
             
             
         }
-        rex = new Dog(players[0]);
-        rex.init();
-        
+        rex = new Rex(players[0]);
+        bambino = new Bambino(rex);
         new EnemySpawner(rex);
         
         switch (Options.getInstance().getLevel()) {
